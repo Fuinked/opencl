@@ -13,18 +13,17 @@ int main(void)
 	cl_uint num_platform;
 	cl_uint i;
 	cl_int err;
-	ofstream fout;
-	fout.open("out.txt");
 	struct platinfo {
 		char* name;
 		char* vendor;
 		char* version;
-		char* profile;
 		char* extensions;
+		char* profile;
 	};
 	size_t size;
-	err = clGetPlatformIDs(0, NULL, &num_platform);
-	//第一次调用clGetPlatformIDs，获取总平台数，第一个参数无效
+	ofstream fout;
+	fout.open("out.txt");
+	err = clGetPlatformIDs(10, NULL, &num_platform);
 	if (err < 0)
 	{
 		cout << "无法获取platformids";

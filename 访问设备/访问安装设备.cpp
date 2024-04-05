@@ -68,17 +68,19 @@ int main(void)
 				devices_name = new char[sizeof(char) * size];
 				clGetDeviceInfo(devices[j], CL_DEVICE_NAME, size, devices_name, NULL);
 				fout << "设备名称：" << devices_name << endl;
+				delete[] devices_name;
 
 				clGetDeviceInfo(devices[j], CL_DEVICE_VENDOR, 0, NULL, &size);
 				devices_name = new char[sizeof(char) * size];
 				clGetDeviceInfo(devices[j], CL_DEVICE_VENDOR, size, devices_name, NULL);
 				fout << "设备厂商：" << devices_name << endl;
+				delete[] devices_name;
 
 				clGetDeviceInfo(devices[j], CL_DEVICE_EXTENSIONS, 0, NULL, &size);
 				devices_name = new char[sizeof(char) * size];
 				clGetDeviceInfo(devices[j], CL_DEVICE_EXTENSIONS, size, devices_name, NULL);
-
 				fout << "设备拓展：" << devices_name << endl;
+				delete[] devices_name;
 
 				cl_ulong mem_size;
 				clGetDeviceInfo(devices[j], CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(mem_size), &mem_size, NULL);
