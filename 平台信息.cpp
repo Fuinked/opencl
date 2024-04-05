@@ -13,18 +13,19 @@ int main(void)
 	cl_uint num_platform;
 	cl_uint i;
 	cl_int err;
-	ofstream fout;
-	fout.open("out.txt");
 	struct platinfo {
 		char* name;
 		char* vendor;
 		char* version;
-		char* profile;
 		char* extensions;
+		char* profile;
+		cl_ulong timer_nano;
+
 	};
 	size_t size;
-	err = clGetPlatformIDs(0, NULL, &num_platform);
-	//第一次调用clGetPlatformIDs，获取总平台数，第一个参数无效
+	ofstream fout;
+	fout.open("out.txt");
+	err = clGetPlatformIDs(10, NULL, &num_platform);
 	if (err < 0)
 	{
 		cout << "无法获取platformids";
@@ -50,7 +51,7 @@ int main(void)
 		//获取平台名称的长度
 		try 
 		{
-			info.name = new char[sizeof(char) * size];
+			info.name = new char[size];
 		}
 		catch (std::bad_alloc)
 		{
@@ -64,7 +65,7 @@ int main(void)
 		//获取平台厂商名称的长度
 		try
 		{
-			info.vendor = new char[sizeof(char) * size];
+			info.vendor = new char[size];
 		}
 		catch (std::bad_alloc)
 		{
@@ -78,7 +79,7 @@ int main(void)
 		//获取平台支持的最高OPenCL版本的字长
 		try
 		{
-			info.version = new char[sizeof(char) * size];
+			info.version = new char[ size];
 		}
 		catch (std::bad_alloc)
 		{
@@ -92,7 +93,7 @@ int main(void)
 		//
 		try
 		{
-			info.profile = new char[sizeof(char) * size];
+			info.profile = new char[size];
 		}
 		catch (std::bad_alloc)
 		{
@@ -104,7 +105,7 @@ int main(void)
 		clGetPlatformInfo(platform[i], CL_PLATFORM_EXTENSIONS, 0, NULL, &size);
 		try
 		{
-			info.extensions = new char[sizeof(char) * size];
+			info.extensions = new char[ size];//
 		}
 		catch (std::bad_alloc)
 		{
@@ -112,12 +113,19 @@ int main(void)
 			exit(-1);
 		}
 		clGetPlatformInfo(platform[i], CL_PLATFORM_EXTENSIONS, size, info.extensions, NULL);
+		
+		clGetPlatformInfo(platform[i], CL_PLATFORM_HOST_TIMER_RESOLUTION, 0, &info.timer_nano, NULL);
+		
+		
 
 		fout << "平台名称：" << info.name<<endl;
 		fout << "平台厂商：" << info.vendor << endl;
 		fout << "最高OPenCL版本：" << info.version << endl;
 		fout << "支持的完整性：" << info.profile << endl;
-		fout << "支持的拓展名列表：" << info.extensions << endl << endl;
+		fout << "主机、服务器同步解决方案：" << info.timer_nano << endl;
+		fout << "支持的拓展名列表：" << info.extensions << endl<<endl ;
+		
+		delete[] info.extensions, info.name, info.profile, info.vendor, info.version;
 	}
 
 	return 0;
