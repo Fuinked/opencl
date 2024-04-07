@@ -126,6 +126,7 @@ int main(void)
 		fout << "支持的拓展名列表：" << info.extensions << endl<<endl ;
 		
 		delete[] info.extensions, info.name, info.profile, info.vendor, info.version;
+
 	}
 
 	return 0;
